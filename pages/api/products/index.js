@@ -1,5 +1,12 @@
-import { products } from "../../../lib/products";
+import dbConnect from "@/db/connect";
+import Product from "@/db/models/schema";
 
-export default function handler(request, response) {
-  return response.status(200).json(products);
+export default async function handler(request, response) {
+  await dbConnect();
+  if (request.method === "GET") {
+    const products = await Product.find();
+    response.status(200).json(products);
+  }
+
+  request.status(405).json({ status: "Request method not implemented." });
 }
